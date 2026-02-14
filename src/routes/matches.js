@@ -47,7 +47,9 @@ matchRouter.post("/", async (req, res) => {
   }
 
   // Desestructurar parsed.data solo después de asegurar que la validación fue exitosa
-  const { data: {startTime, endTime, homeScore, awayScore} } = parsed;
+  const {
+    data: { startTime, endTime, homeScore, awayScore },
+  } = parsed;
 
   try {
     const [event] = await db
@@ -61,6 +63,10 @@ matchRouter.post("/", async (req, res) => {
         status: getMatchStatus(startTime, endTime),
       })
       .returning();
+
+    if (res.app.locals.broadcasMatchCreated) {
+      res.app.locals.broadcastMatchCreated(event);
+    }
 
     res.status(201).json({ data: event });
   } catch (error) {
