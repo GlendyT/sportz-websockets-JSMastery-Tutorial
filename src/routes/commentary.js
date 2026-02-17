@@ -46,8 +46,6 @@ commentaryRouter.get("/", async (req, res) => {
     console.error("Failed to fetch commentary:", error);
     res.status(500).json({ error: "Failed to fetch commentary" });
   }
-
-  res.status(200).json({ message: "Commentary list" });
 });
 
 commentaryRouter.post("/", async (req, res) => {
@@ -67,16 +65,20 @@ commentaryRouter.post("/", async (req, res) => {
   }
 
   try {
-    const { minutes, ...rest } = bodyResult.data;
+    const { minute, ...rest } = bodyResult.data;
 
     const [result] = await db
       .insert(commentary)
       .values({
         matchId: paramsResult.data.id,
-        minutes,
+        minute,
         ...rest,
       })
       .returning();
+
+    if (res.app.locals.broadcastCommentary) {
+      res.app.locals.broadcastCommentary(result.matchId, result);
+    }
 
     res.status(201).json({ data: result });
   } catch (error) {
