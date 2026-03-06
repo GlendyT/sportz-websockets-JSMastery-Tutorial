@@ -1,5 +1,5 @@
 import { API_BASE_URL } from "@/constants";
-import { CommentaryResponse, MatchResponse } from "@/src/types";
+import { CommentaryResponse, MatchResponse } from "@/types";
 
 export const fetchMatches = async (limit = 50): Promise<MatchResponse> => {
   const response = await fetch(`${API_BASE_URL}/matches?limit=${limit}`, {
