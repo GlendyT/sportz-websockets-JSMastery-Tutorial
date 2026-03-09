@@ -1,6 +1,7 @@
-import { Commentary, Match, WSMessage } from "@/src/types";
+
 import { useWebSocket } from "./useWebSockets";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Commentary, Match, WSMessage } from "@/types";
 import { fetchMatchCommentary, fetchMatches } from "@/services/api";
 
 interface UseMatchData {
@@ -30,7 +31,7 @@ export const useMatchData = (): UseMatchData => {
     null,
   );
   const [newMatchesCount, setNewMatchesCount] = useState(0);
-  const latestMatchIdRef = useRef(<string | number | null>(null));
+  const latestMatchIdRef = useRef<string | number | null>(null);
   const subscribedMatchIdsRef = useRef(new Set<string>());
   const hasLoadedRef = useRef(false);
   const knownMatchIdsRef = useRef(new Set<string>());
@@ -139,7 +140,7 @@ export const useMatchData = (): UseMatchData => {
         }
       }
 
-      knownMatchIdsRef.current = nextMatchIds;
+      knownMatchIdsRef.current = nextMatchIds as Set<string>;
 
       nextMatches.forEach((match) => {
         const matchId = String(match.id);

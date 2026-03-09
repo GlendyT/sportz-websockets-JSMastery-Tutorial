@@ -1,9 +1,7 @@
-import {
-  INITIAL_RECONNECT_DELAY,
-  MAX_RECONNECT_DELAY,
-  WS_BASE_URL,
-} from "@/constants";
-import { ConnectionStatus, WSMessage } from "@/src/types";
+
+import { INITIAL_RECONNECT_DELAY, MAX_RECONNECT_DELAY, WS_BASE_URL } from "@/constants";
+import { ConnectionStatus, WSMessage } from "@/types";
+
 import { useCallback, useEffect, useRef, useState } from "react";
 
 interface UseWebSocketReturn {
