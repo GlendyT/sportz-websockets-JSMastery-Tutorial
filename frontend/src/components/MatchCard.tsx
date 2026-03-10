@@ -14,6 +14,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({
   onWatch,
   onUnwatch,
 }) => {
+  // Handle case-insensitive status check from API
   const statusLower = match.status.toLowerCase();
   const isLive = statusLower === "live";
   const [homePulse, setHomePulse] = useState(false);
@@ -71,18 +72,23 @@ export const MatchCard: React.FC<MatchCardProps> = ({
     };
   }, [match.homeScore, match.awayScore]);
 
+  // Format status for display (Capitalize first letter)
   const displayStatus =
     match.status.charAt(0).toUpperCase() + match.status.slice(1).toLowerCase();
 
   return (
     <div
-      className={` relative p-5 rounded-2xl border-2 border-black bg-white transition-all duration-200 ${isActive ? "shadow-hard -translate-x-0.5 -translate-y-0.5 ring-2 ring-[#FDE047] ring-offset-2" : "hover:shadow-hard-sm "}`}
+      className={`
+      relative p-5 rounded-2xl border-2 border-black bg-white transition-all duration-200
+      ${isActive ? " translate-x-[-2px] translate-y-[-2px] ring-2 ring-brand-yellow ring-offset-2" : "hover:shadow-hard-sm"}
+    `}
+      style={{ boxShadow: "4px 4px 0px 0px" }}
     >
+      {/* Header: Sport & Status */}
       <div className="flex justify-between items-start mb-4">
         <span className="text-xs font-bold uppercase tracking-wider text-gray-500 border border-black rounded-full px-2 py-0.5">
           {match.sport}
         </span>
-
         <div className="flex items-center gap-2">
           {isLive && (
             <span className="flex h-3 w-3 relative">
@@ -96,50 +102,69 @@ export const MatchCard: React.FC<MatchCardProps> = ({
             {displayStatus}
           </span>
         </div>
+      </div>
 
-        <div className="flex flex-col gap-3 mb-6">
-          <div className="flex justify-between items-center">
-            <span className="font-bold text-lg text-[#181818] line-clamp-1">
-              {match.homeTeam}
-            </span>
-            <span
-              className={`font-bold text-2xl border border-black rounded-lg px-3 py-1 min-w-12 text-center transition-colors ${homePulse ? "bg-[#FDE047] animate-pulse" : "bg-gray-100"}`}
-            >
-              {match.homeScore}
-            </span>
-          </div>
-
-          <div className="flex justify-between items-center">
-            <span className="font-bold text-lg text-[#181818] line-clamp-1">
-              {match.awayTeam}
-            </span>
-            <span
-              className={`font-bold text-2xl border border-black rounded-lg px-3 py-1 min-w-12text-center transition-colors ${awayPulse ? "bg-[#FDE047] animate-pulse" : "bg-gray-100"}`}
-            >
-              {match.awayScore}
-            </span>
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between mt-auto pt-4 border-t-2 border-gray-100 border-dashed">
-          <span className="text-xs text-gray-500 font-medium">
-            {new Date(match.startTime).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
+      {/* Teams & Score */}
+      <div className="flex flex-col gap-3 mb-6">
+        <div className="flex justify-between items-center">
+          <span className="font-bold text-lg text-[#18181B] line-clamp-1">
+            {match.homeTeam}
           </span>
-          <div className="flex items-center gap-2">
+          <span
+            className={`
+              font-bold text-2xl border border-black rounded-lg px-3 py-1 min-w-[3rem] text-center transition-colors
+              ${homePulse ? "bg-brand-yellow animate-pulse" : "bg-gray-100"}
+            `}
+          >
+            {match.homeScore}
+          </span>
+        </div>
+        <div className="flex justify-between items-center">
+          <span className="font-bold text-lg text-[#18181B] line-clamp-1">
+            {match.awayTeam}
+          </span>
+          <span
+            className={`
+              font-bold text-2xl border border-black rounded-lg px-3 py-1 min-w-[3rem] text-center transition-colors
+              ${awayPulse ? "bg-brand-yellow animate-pulse" : "bg-gray-100"}
+            `}
+          >
+            {match.awayScore}
+          </span>
+        </div>
+      </div>
+
+      {/* Footer: Action */}
+      <div className="flex items-center justify-between mt-auto pt-4 border-t-2 border-gray-100 border-dashed">
+        <span className="text-xs text-gray-500 font-medium">
+          {new Date(match.startTime).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </span>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => onWatch(match.id)}
+            disabled={isActive}
+            className={`
+              px-4 py-2 rounded-full font-bold text-sm border-2 border-black transition-all
+              ${
+                isActive
+                  ? "bg-[#BAE6FD] text-black cursor-default opacity-100"
+                  : "bg-brand-yellow text-black hover:bg-yellow-300 active:translate-y-0.5"
+              }
+            `}
+          >
+            {actionLabel}
+          </button>
+          {isActive && (
             <button
-              className={` px-4 py-2 rounded-full font-bold text-sm border-2 border-black transition-all ${isActive ? "bg-[#BAE6FD] text-black cursor-default opacity-100" : "bg-[#FDE047] text-black hover:bg-yellow-300 active:translate-y-0.5"}`}
+              onClick={() => onUnwatch(match.id)}
+              className="px-3 py-2 rounded-full font-bold text-xs border-2 border-black bg-white hover:bg-gray-50 transition-all"
             >
-              {actionLabel}
+              Close
             </button>
-            {isActive && (
-              <button className=" px-3 py-2 rounded-full font-bold text-xs border-2 border-black bg-white hover:bg-gray-50 transition-all">
-                Close
-              </button>
-            )}
-          </div>
+          )}
         </div>
       </div>
     </div>
