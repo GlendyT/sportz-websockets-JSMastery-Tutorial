@@ -39,7 +39,10 @@ function App() {
   return (
     <div className="min-h screen p-4 md:p-8 font-sans">
       <div className="max-w-7xl mx-auto space-y-8">
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-[#FDE047] border-2 border-black rounded-2xl p-6 shadow-hard">
+        <header
+          className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-[#FDE047] border-2 border-black rounded-2xl p-6"
+          style={{ boxShadow: "4px 4px 0px 0px" }}
+        >
           <div className="">
             <h1 className="text-3xl font-black tracking-tight text-[#181818] mb-1">
               Sportz
@@ -70,7 +73,10 @@ function App() {
             </div>
 
             {newMatchesCount > 0 && (
-              <div className="flex items-center justify-between gap-3 bg-[#FDE047] border-2 border-black rounded-xl px-4 py-3 shadow-hard-sm">
+              <div
+                className="flex items-center justify-between gap-3 bg-[#FDE047] border-2 border-black rounded-xl px-4 py-3"
+                style={{ boxShadow: "2px 2px 0px 0px" }}
+              >
                 <span className="text-sm font-bold">
                   {newMatchesCount} new match{newMatchesCount > 1 ? "es" : ""}{" "}
                   added

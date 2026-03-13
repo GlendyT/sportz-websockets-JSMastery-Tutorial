@@ -57,5 +57,103 @@ export const LiveFeed: React.FC<LiveFeedProps> = ({
     );
   }
 
-  return <div>LiveFeed</div>;
+  return (
+    <div
+      className="flex flex-col h-full bg-white border-2 border-black rounded-2xl overflow-hidden"
+      style={{ boxShadow: "4px 4px 0px 0px" }}
+    >
+      <div className="p-4 bg-[#BAE6FD] border-b-2 border-black flex justify-between items-center">
+        <h3>Live Commentary</h3>
+        <span className="text-xs bg-white px-2 py-0.5 border border-black rounded-md font-medium">
+          Real-time
+        </span>
+      </div>
+
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
+        {isLoading ? (
+          <div className="texxt-center py-10 text-gray-400 italic">
+            Loading commentary
+          </div>
+        ) : messages.length === 0 ? (
+          <div className="text-center py-10 text-gray-400 italic">
+            Waiting for updates...
+          </div>
+        ) : (
+          messages.map((msg) => {
+            const timestamp = msg.createdAt
+              ? new Date(msg.createdAt)
+              : new Date();
+            const minuteLabel = formatMinute(msg.minute);
+            const metadataLabel = formatMetadata(msg.metadata);
+            return (
+              <div
+                className="animate-in fade-in side-in-from-top-2 duration-300"
+                key={msg.id}
+              >
+                <div className="flex gap-3">
+                  <div className="flex flex-col items-center gap-1 mt-1">
+                    <div className="w-2 h-2 rounded-full bg-brand-yello border border-black"></div>
+                    <div className="w-0.5 h-full bg-gray-200"></div>
+                  </div>
+                  <div className="pb-4">
+                    <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500 mb-1">
+                      <span className="font-monto text-gray-400">
+                        {timestamp.toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          second: "2-digit",
+                        })}
+                      </span>
+                      {minuteLabel && (
+                        <span className="px-2 py-0.5 bg-gray-100 border border-gray-200 rounded-full font-semibold">
+                          {minuteLabel}
+                        </span>
+                      )}
+                      {msg.period && (
+                        <span className="px-2 py-0.5 bg-gray-100 border border-gray-200 rounded-full">
+                          {msg.period}
+                        </span>
+                      )}
+                      {msg.eventType && (
+                        <span className="px-2 py-0.5 bg-brandyellow border border-black rounded-full font-semibold uppercase tracking-wide text-[10px]">
+                          {msg.eventType}
+                        </span>
+                      )}
+                    </div>
+                    {(msg.actor || msg.team) && (
+                      <div className="text-xs font-semibold text-gray-700 mb-2">
+                        {msg.actor ? msg.actor : "Unknown"}
+                        {msg.team ? ` . ${msg.team}` : ""}
+                      </div>
+                    )}
+
+                    <p className="text-sm font-medium text-gray-800 leading-relazed bg-gray-50 p-3 rounded-xl rounded-tl-none border border-gray-200">
+                      {msg.message}
+                    </p>
+                    {metadataLabel && (
+                      <div className="mt-2 text-[11px] font-mono text-gray-500 bg-white border border-gray-200 px-2 py-1 rounded">
+                        {metadataLabel}
+                      </div>
+                    )}
+                    {msg.tags && msg.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {msg.tags.map((tag) => (
+                          <span
+                            key={`${msg.id}-${tag}`}
+                            className="text-[10px] uppercase tracking-wide text-gray-500 bg-white border border-gray-200 px-2 py-0.5 rounded-full"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+    </div>
+  );
 };
